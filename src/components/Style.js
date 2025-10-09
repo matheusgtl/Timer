@@ -43,6 +43,27 @@ export const styles = StyleSheet.create({
   iconText: {
     fontSize: 24,
   },
+  settingsIconContainer: {
+    position: 'absolute',
+    bottom: 50,
+    left: 20,
+    zIndex: 10,
+  },
+  settingsIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   timerContainer: {
     marginBottom: 40,
     alignItems: 'center',
