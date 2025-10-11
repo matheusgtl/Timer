@@ -36,10 +36,12 @@ export default function Chronometer() {
   }, [isRunning]);
   //fim do useEffect para o cronometro
   
+  //funcao dos botoes de start/pause/reset
   const handleStartPause = () => {
     setIsRunning(!isRunning);
   };
   
+  //funcao do botao reset
   const handleReset = () => {
     setIsRunning(false);
     setSeconds(0);
@@ -47,10 +49,12 @@ export default function Chronometer() {
     setHours(0);
   };
   
+  //funcao do botao darkmode que altera o estado
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
   
+  //funcao pra deixar o tempo com dois digitos
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time;
   };
