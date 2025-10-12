@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react';
-import { View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity, Animated} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../components/Style.js';
 
@@ -9,6 +9,8 @@ export default function Chronometer() {
   const [hours, setHours] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [slideAnim] = useState(new Animated.Value(-300));
   
   //inicio do useEffect para o cronometro
   useEffect(() => {
@@ -35,6 +37,26 @@ export default function Chronometer() {
     return () => clearInterval(interval);
   }, [isRunning]);
   //fim do useEffect para o cronometro
+
+  //funcao do botao de config
+  const toggleConfig = () => {
+    if (isConfigOpen) {
+      // Fechar sidebar
+      Animated.timing(slideAnim, {
+        toValue: -300,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => setIsConfigOpen(false));
+    } else {
+      // Abrir sidebar
+      setIsConfigOpen(true);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
   
   //funcao dos botoes de start/pause/reset
   const handleStartPause = () => {
@@ -64,6 +86,46 @@ export default function Chronometer() {
       styles.container,
       darkMode ? styles.darkContainer : styles.lightContainer
     ]}>
+      {/* Sidebar de configurações */}
+      {isConfigOpen && (
+        <Animated.View style={[
+          styles.sideBar,
+          darkMode ? styles.darkSideBar : styles.lightSideBar,
+          { transform: [{ translateX: slideAnim }] }
+        ]}>
+          <View style={styles.sideBarHeader}>
+            <Text style={[styles.sideBarTitle, darkMode ? styles.darkText : styles.lightText]}>
+              Configurações
+            </Text>
+            <TouchableOpacity onPress={toggleConfig}>
+              <Ionicons 
+                name="close" 
+                size={28} 
+                color={darkMode ? '#ffffff' : '#333333'} 
+              />
+            </TouchableOpacity>
+          </View>
+          
+          <View style={styles.sideBarContent}>
+            <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
+              Tempo inicial
+            </Text>
+            <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
+              (Em desenvolvimento)
+            </Text>
+          </View>
+        </Animated.View>
+      )}
+
+      {/* Overlay escuro quando sidebar está aberta */}
+      {isConfigOpen && (
+        <TouchableOpacity 
+          style={styles.overlay} 
+          activeOpacity={1} 
+          onPress={toggleConfig}
+        />
+      )}
+      
       {/* Botão de modo noturno no canto superior direito */}
       <View style={styles.darkModeIconContainer}>
         <TouchableOpacity
@@ -86,7 +148,7 @@ export default function Chronometer() {
             styles.settingsIcon,
             darkMode ? styles.darkModeIconDark : styles.darkModeIconLight
           ]}
-          onPress={() => alert('Configurações')}
+          onPress={toggleConfig}
         >
           <Text style={styles.iconText}>⚙️</Text>
         </TouchableOpacity>
