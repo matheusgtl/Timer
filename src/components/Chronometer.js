@@ -2,6 +2,7 @@ import { useState, useEffect} from 'react';
 import { View, Text, TouchableOpacity, Animated} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../components/Style.js';
+import { TextInput } from 'react-native-web';
 
 export default function Chronometer() {
   const [seconds, setSeconds] = useState(0);
@@ -11,6 +12,10 @@ export default function Chronometer() {
   const [darkMode, setDarkMode] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [slideAnim] = useState(new Animated.Value(-300));
+  // Estados separados para os inputs de configuração
+  const [configHours, setConfigHours] = useState('');
+  const [configMinutes, setConfigMinutes] = useState('');
+  const [configSeconds, setConfigSeconds] = useState('');
   
   //inicio do useEffect para o cronometro
   useEffect(() => {
@@ -58,6 +63,14 @@ export default function Chronometer() {
     }
   };
   
+  // Função para aplicar as configurações
+  const applyConfig = () => {
+    setHours(configHours === '' ? 0 : Number(configHours));
+    setMinutes(configMinutes === '' ? 0 : Number(configMinutes));
+    setSeconds(configSeconds === '' ? 0 : Number(configSeconds));
+    toggleConfig();
+  };
+  
   //funcao dos botoes de start/pause/reset
   const handleStartPause = () => {
     setIsRunning(!isRunning);
@@ -95,7 +108,7 @@ export default function Chronometer() {
         ]}>
           <View style={styles.sideBarHeader}>
             <Text style={[styles.sideBarTitle, darkMode ? styles.darkText : styles.lightText]}>
-              Configurações
+              Configurações ⚙️
             </Text>
             <TouchableOpacity onPress={toggleConfig}>
               <Ionicons 
@@ -108,11 +121,46 @@ export default function Chronometer() {
           
           <View style={styles.sideBarContent}>
             <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
-              Tempo inicial
+              Definir tempo inicial
             </Text>
-            <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
-              (Em desenvolvimento)
-            </Text>
+            <View style={styles.inputRow}>
+              <TextInput
+                keyboardType="numeric"
+                placeholder="Horas"
+                placeholderTextColor={darkMode ? '#999999' : '#666666'}
+                value={configHours}
+                onChangeText={setConfigHours}
+                style={[styles.input, darkMode ? styles.inputDark : styles.inputLight]}
+              />
+
+              <TextInput
+                keyboardType="numeric"
+                placeholder="Minutos"
+                placeholderTextColor={darkMode ? '#999999' : '#666666'}
+                value={configMinutes}
+                onChangeText={setConfigMinutes}
+                style={[styles.input, darkMode ? styles.inputDark : styles.inputLight]}
+              />
+
+              <TextInput
+                keyboardType="numeric"
+                placeholder="Segundos"
+                placeholderTextColor={darkMode ? '#999999' : '#666666'}
+                value={configSeconds}
+                onChangeText={setConfigSeconds}
+                style={[styles.input, darkMode ? styles.inputDark : styles.inputLight]}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[styles.button, styles.startResetButton, { marginTop: 20, width: '100%', height: 50 }]}
+              onPress={applyConfig}
+            >
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                Aplicar
+              </Text>
+            </TouchableOpacity>
+
           </View>
         </Animated.View>
       )}

@@ -133,7 +133,7 @@ export const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    width: 300,
+    width: 500,
     zIndex: 15,
     shadowColor: '#000',
     shadowOffset: {
@@ -176,6 +176,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 20,
+    paddingBottom: 10,
   },
   // Overlay para modal/configurações
   overlay: {
@@ -186,5 +187,28 @@ export const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 12,
+  },
+  // Container dos inputs em linha
+  inputRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 10,
+  },
+  // Estilo dos inputs
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor:'#28b07aff',
+    borderRadius: 8,
+    padding: 10,
+    width: '30%',
+  },
+  // Input no modo claro
+  inputLight: {
+    color: '#333333',
+  },
+  // Input no modo escuro
+  inputDark: {
+    color: '#ffffff',
   },
 });
