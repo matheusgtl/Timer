@@ -12,6 +12,8 @@ export default function Chronometer() {
   const [darkMode, setDarkMode] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [slideAnim] = useState(new Animated.Value(-300));
+  //modo do cronômetro ('asc' = crescente, 'desc' = decrescente/timer)
+  const [timerMode, setTimerMode] = useState('asc');
   // Estados separados para os inputs de configuração
   const [configHours, setConfigHours] = useState('');
   const [configMinutes, setConfigMinutes] = useState('');
@@ -22,25 +24,50 @@ export default function Chronometer() {
     let interval = null;
     if (isRunning) {
       interval = setInterval(() => {
-        setSeconds(prevSeconds => {
-          if (prevSeconds === 59) {
-            setMinutes(prevMinutes => {
-              if (prevMinutes === 59) {
-                setHours(prevHours => prevHours + 1);
-                return 0;
-              }
-              return prevMinutes + 1;
-            });
-            return 0;
-          }
-          return prevSeconds + 1;
-        });
+        if (timerMode === 'asc') {
+          // MODO CRESCENTE (cronômetro normal)
+          setSeconds(prevSeconds => {
+            if (prevSeconds === 59) {
+              setMinutes(prevMinutes => {
+                if (prevMinutes === 59) {
+                  setHours(prevHours => prevHours + 1);
+                  return 0;
+                }
+                return prevMinutes + 1;
+              });
+              return 0;
+            }
+            return prevSeconds + 1;
+          });
+        } else {
+          // MODO DECRESCENTE (timer)
+          setSeconds(prevSeconds => {
+            if (prevSeconds === 0) {
+              setMinutes(prevMinutes => {
+                if (prevMinutes === 0) {
+                  setHours(prevHours => {
+                    if (prevHours === 0) {
+                      // Timer chegou a zero, para a execução
+                      setIsRunning(false);
+                      return 0;
+                    }
+                    return prevHours - 1;
+                  });
+                  return 59;
+                }
+                return prevMinutes - 1;
+              });
+              return 59;
+            }
+            return prevSeconds - 1;
+          });
+        }
       }, 1000);
     } else {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, [isRunning, timerMode]);
   //fim do useEffect para o cronometro
 
   //funcao do botao de config
@@ -61,6 +88,16 @@ export default function Chronometer() {
         useNativeDriver: true,
       }).start();
     }
+  };
+  
+  //Toggle entre modo crescente e decrescente
+  const toggleTimerMode = () => {
+    setTimerMode(prevMode => prevMode === 'asc' ? 'desc' : 'asc');
+    // Reseta o cronômetro ao mudar de modo
+    setIsRunning(false);
+    setSeconds(0);
+    setMinutes(0);
+    setHours(0);
   };
   
   // Função para aplicar as configurações
@@ -120,6 +157,7 @@ export default function Chronometer() {
           </View>
           
           <View style={styles.sideBarContent}>
+            {/* definir tempo inicial */}
             <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
               Definir tempo inicial
             </Text>
@@ -152,15 +190,58 @@ export default function Chronometer() {
               />
             </View>
 
-            <TouchableOpacity
-              style={[styles.button, styles.startResetButton, { marginTop: 20, width: '100%', height: 50 }]}
+            {/* toggle switch de modo */}
+            <View style={styles.toggleContainer}>
+              <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText, { marginBottom: 10 }]}>
+                Modo
+              </Text>
+              
+              <TouchableOpacity
+                onPress={toggleTimerMode}
+                style={[
+                  styles.toggleSwitch,
+                  darkMode ? styles.toggleSwitchDark : styles.toggleSwitchLight
+                ]}
+              >
+                {/* Bolinha deslizante verde */}
+                <View style={[
+                  styles.toggleSlider,
+                  timerMode === 'asc' ? styles.toggleSliderLeft : styles.toggleSliderRight
+                ]} />
+                
+                {/* Textos */}
+                <View style={styles.toggleTextContainer}>
+                  <Text style={[
+                    styles.toggleText,
+                    timerMode === 'asc' 
+                      ? styles.toggleTextActive 
+                      : (darkMode ? styles.toggleTextInactiveDark : styles.toggleTextInactiveLight)
+                  ]}>
+                    Crescente
+                  </Text>
+                </View>
+                
+                <View style={styles.toggleTextContainer}>
+                  <Text style={[
+                    styles.toggleText,
+                    timerMode === 'desc' 
+                      ? styles.toggleTextActive 
+                      : (darkMode ? styles.toggleTextInactiveDark : styles.toggleTextInactiveLight)
+                  ]}>
+                    Decrescente
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+              style={[styles.button, styles.startResetButton, { marginTop: 40, width: '100%', height: 50 }]}
               onPress={applyConfig}
             >
               <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
                 Aplicar
               </Text>
             </TouchableOpacity>
-
+            </View>
           </View>
         </Animated.View>
       )}
@@ -189,6 +270,7 @@ export default function Chronometer() {
         </TouchableOpacity>
       </View>
       
+
       {/* Botão de configurações no canto inferior esquerdo */}
       <View style={styles.settingsIconContainer}>
         <TouchableOpacity

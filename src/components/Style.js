@@ -211,4 +211,87 @@ export const styles = StyleSheet.create({
   inputDark: {
     color: '#ffffff',
   },
+  
+  // ========== TOGGLE SWITCH STYLES ==========
+  // Container do toggle switch
+  toggleContainer: {
+    marginBottom: 20,
+  },
+  // Botão do toggle switch
+  toggleSwitch: {
+    width: '100%',
+    height: 50,
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { 
+      width: 0, 
+      height: 2 
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
+    elevation: 3,
+    borderWidth: 2,
+  },
+  // Toggle switch no modo claro
+  toggleSwitchLight: {
+    backgroundColor: '#ffffff',
+    borderColor: '#e5e7eb',
+  },
+  // Toggle switch no modo escuro
+  toggleSwitchDark: {
+    backgroundColor: '#3a3a3a',
+    borderColor: '#4a4a4a',
+  },
+  // Bolinha deslizante do toggle
+  toggleSlider: {
+    width: '50%',
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#28b07aff',
+    position: 'absolute',
+    shadowColor: '#000',
+    shadowOffset: { 
+      width: 0, 
+      height: 2 
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  // Posição da bolinha quando está à esquerda
+  toggleSliderLeft: {
+    left: 4,
+  },
+  // Posição da bolinha quando está à direita
+  toggleSliderRight: {
+    right: 4,
+  },
+  // Container do texto do toggle
+  toggleTextContainer: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+  // Texto do toggle
+  toggleText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  // Texto ativo (sobre a bolinha verde)
+  toggleTextActive: {
+    color: '#ffffff',
+  },
+  // Texto inativo no modo claro
+  toggleTextInactiveLight: {
+    color: '#666666',
+  },
+  // Texto inativo no modo escuro
+  toggleTextInactiveDark: {
+    color: '#666666',
+  },
 });
