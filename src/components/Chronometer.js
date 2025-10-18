@@ -41,33 +41,27 @@ export default function Chronometer() {
           });
         } else {
           // MODO DECRESCENTE (timer)
-          setSeconds(prevSeconds => {
-            if (prevSeconds === 0) {
-              setMinutes(prevMinutes => {
-                if (prevMinutes === 0) {
-                  setHours(prevHours => {
-                    if (prevHours === 0) {
-                      // Timer chegou a zero, para a execução
-                      setIsRunning(false);
-                      return 0;
-                    }
-                    return prevHours - 1;
-                  });
-                  return 59;
-                }
-                return prevMinutes - 1;
-              });
-              return 59;
-            }
-            return prevSeconds - 1;
-          });
+          if (hours === 0 && minutes === 0 && seconds === 0) {
+            setIsRunning(false);
+            return;
+          }
+          if (seconds > 0) {
+            setSeconds(seconds - 1);
+          } else if (minutes > 0) {
+            setMinutes(minutes - 1);
+            setSeconds(59);
+          } else if (hours > 0) {
+            setHours(hours - 1);
+            setMinutes(59);
+            setSeconds(59);
+          }
         }
       }, 1000);
     } else {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [isRunning, timerMode]);
+  }, [isRunning, timerMode, hours, minutes, seconds]);
   //fim do useEffect para o cronometro
 
   //funcao do botao de config
@@ -286,10 +280,7 @@ export default function Chronometer() {
       
       {/* Timer centralizado */}
       <View style={styles.timerContainer}>
-        <Text style={[
-          styles.timerText,
-          darkMode ? styles.darkText : styles.lightText
-        ]}>
+        <Text style={[styles.timerText, darkMode ? styles.darkText : styles.lightText]}>
           {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
         </Text>
       </View>
