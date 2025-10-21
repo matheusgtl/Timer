@@ -18,6 +18,7 @@ export default function Chronometer() {
   const [configHours, setConfigHours] = useState('');
   const [configMinutes, setConfigMinutes] = useState('');
   const [configSeconds, setConfigSeconds] = useState('');
+  const [isSoundOn, setIsSoundOn] = useState(false);
   
   //inicio do useEffect para o cronometro
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function Chronometer() {
           // MODO DECRESCENTE (timer)
           if (hours === 0 && minutes === 0 && seconds === 0) {
             setIsRunning(false);
+            soundAlert();
             return;
           }
           if (seconds > 0) {
@@ -92,6 +94,14 @@ export default function Chronometer() {
     setSeconds(0);
     setMinutes(0);
     setHours(0);
+  };
+
+  const soundAlert = () => {
+    console.log("alerta sonoro", isSoundOn);
+    if (isSoundOn){
+      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
+      audio.play();
+    }
   };
   
   // Função para aplicar as configurações
@@ -227,14 +237,34 @@ export default function Chronometer() {
                 </View>
               </TouchableOpacity>
 
+              {/* toggle switch de som */}
+              <View style={styles.soundToggleContainer}>
+                <Text style={[styles.label, darkMode ? styles.darkText : styles.lightText]}>
+                  Adicionar alerta  🔊
+                </Text>
+                
+                <TouchableOpacity
+                  onPress={() => setIsSoundOn(!isSoundOn)}
+                  style={[
+                    styles.iphoneToggle,
+                    isSoundOn ? styles.iphoneToggleOn : styles.iphoneToggleOff
+                  ]}
+                >
+                  <View style={[
+                    styles.iphoneToggleThumb,
+                    isSoundOn && styles.iphoneToggleThumbOn 
+                  ]} />
+                </TouchableOpacity>
+              </View>
+
               <TouchableOpacity
-              style={[styles.button, styles.startResetButton, { marginTop: 40, width: '100%', height: 50 }]}
-              onPress={applyConfig}
-            >
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
-                Aplicar
-              </Text>
-            </TouchableOpacity>
+                style={[styles.button, styles.startResetButton, { marginTop: 40, width: '100%', height: 50 }]}
+                onPress={applyConfig}
+              >
+                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                  Aplicar
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Animated.View>

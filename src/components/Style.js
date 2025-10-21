@@ -294,4 +294,43 @@ export const styles = StyleSheet.create({
   toggleTextInactiveDark: {
     color: '#666666',
   },
+  
+  // ========== IPHONE TOGGLE STYLES ==========
+  soundToggleContainer: {
+    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  iphoneToggle: {
+    width: 51,
+    height: 31,
+    borderRadius: 15.5,
+    padding: 2,
+    justifyContent: 'center',
+  },
+  iphoneToggleOff: {
+    backgroundColor: '#d1d5db',
+  },
+  iphoneToggleOn: {
+    backgroundColor: '#34C759', // Verde do iOS
+  },
+  iphoneToggleThumb: {
+    width: 27,
+    height: 27,
+    borderRadius: 13.5,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { 
+      width: 0, 
+      height: 2 
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2.5,
+    elevation: 3,
+    transform: [{ translateX: 0 }],
+  },
+  iphoneToggleThumbOn: {
+    transform: [{ translateX: 20 }],
+  },
 });
