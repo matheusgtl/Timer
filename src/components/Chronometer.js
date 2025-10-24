@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Animated} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from '../components/Style.js';
 import { TextInput } from 'react-native-web';
+import { Audio } from 'expo-av';
 
 export default function Chronometer() {
   const [seconds, setSeconds] = useState(0);
@@ -26,7 +27,7 @@ export default function Chronometer() {
     if (isRunning) {
       interval = setInterval(() => {
         if (timerMode === 'asc') {
-          // MODO CRESCENTE (cronômetro normal)
+          //MODO CRESCENTE (cronômetro normal)
           setSeconds(prevSeconds => {
             if (prevSeconds === 59) {
               setMinutes(prevMinutes => {
@@ -96,22 +97,31 @@ export default function Chronometer() {
     setHours(0);
   };
 
-  const soundAlert = () => {
-    console.log("alerta sonoro", isSoundOn);
-    if (isSoundOn){
-      const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3');
-      audio.play();
+  //funcao para o alerta sonoro
+  const soundAlert = async () => {
+  console.log("alerta sonoro", isSoundOn);
+  if (isSoundOn) {
+      const { sound } = await Audio.Sound.createAsync(
+        require('../assets/simple-notification-152054.mp3')
+      );
+      await sound.playAsync();
+      //libera o som da memória após tocar
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          sound.unloadAsync();
+        }
+      });
     }
   };
   
-  // Função para aplicar as configurações
+  //funcao para aplicar as configurações
   const applyConfig = () => {
     setHours(configHours === '' ? 0 : Number(configHours));
     setMinutes(configMinutes === '' ? 0 : Number(configMinutes));
     setSeconds(configSeconds === '' ? 0 : Number(configSeconds));
     toggleConfig();
   };
-  
+
   //funcao dos botoes de start/pause/reset
   const handleStartPause = () => {
     setIsRunning(!isRunning);
